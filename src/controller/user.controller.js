@@ -1,7 +1,8 @@
 const express = require('express');
 const { createUser, authUser } = require('../service/user.service');
 const { isValidUserBody, isValidUser } = require('../helper/validation');
-const { createToken } = require('../helper/jwt')
+const { createToken } = require('../helper/jwt');
+const { buildResponse } = require('../helper/buildResponse')
 const route = express.Router();
 
 
@@ -9,9 +10,9 @@ route.post('/reg', isValidUserBody, async (req, res) => {
     try {
         const { name, surname, email, pwd } = req.body;
         const data = await createUser(name, surname, email, pwd);
-        res.send(data);
+        buildResponse(res, 200, data);
     } catch (err) {
-        res.send(err.message);
+        buildResponse(res, 404, err.message);
     }
 });
 
@@ -22,9 +23,9 @@ route.post('/auth', isValidUser, async (req, res) => {
         const data = await authUser(email, pwd);
         const token = createToken(data);
         res.setHeader('token', [token]);
-        res.send(data);
-        } catch (err) {
-        res.send(err.message);
+        buildResponse(res, 200, data);
+    } catch (err) {
+        buildResponse(res, 404, err.message);
     }
 });
 
