@@ -6,7 +6,7 @@ const { buildResponse } = require('../helper/buildResponse')
 const route = express.Router();
 
 
-route.post('/reg', isValidUserBody, async (req, res) => {
+route.post('/reg', isValidUserBody, isValidUser, async (req, res) => {
     try {
         const { name, surname, email, pwd } = req.body;
         const data = await createUser(name, surname, email, pwd);
